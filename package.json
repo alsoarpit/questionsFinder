@@ -1,0 +1,29 @@
+{
+  "name": "pepHackThreeFinder",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rack1626/threeFinder.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rack1626/threeFinder/issues"
+  },
+  "homepage": "https://github.com/Rack1626/threeFinder#readme",
+  "dependencies": {
+    "center-align": "^1.0.1",
+    "cfonts": "^2.9.3",
+    "chalk": "^4.1.1",
+    "inquirer": "^8.1.1",
+    "pdfkit": "^0.12.1",
+    "puppeteer": "^10.0.0"
+  },
+  "devDependencies": {},
+  "description": ""
+}
