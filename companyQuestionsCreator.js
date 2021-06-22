@@ -89,6 +89,8 @@ exports.companyQuestionsCreator = (async ()=>{
                             else if(userSelectedAnswer.includes("MEDIUM")){selectedLevel = "Medium"}
                             else if(userSelectedAnswer.includes("HARD")){selectedLevel = "Hard"}
                             createCompanyQuestions(selectedCompanyArr,selectedLevel);
+                         //   console.log(chalk.bold.yellow("congratulations your work For Question Finding is Done"));
+                          //  console.log(chalk.bold.yellow("Thank You For Using threeFinder"));
 
                         }
                         else if(userSelectedAnswer=="Other Option"){
@@ -175,11 +177,11 @@ exports.companyQuestionsCreator = (async ()=>{
 
                         if(companyQuestionArr.length!=0){
                             await folderCheck(singleLevel,companyQuestionArr,singleCompany);
+                            console.log(chalk.bold.yellow(`Congratulations QuestionsPDF For ${singleCompany}  ${singleLevel} Level has been Created` ));
                         }else{
-                            console.log(`GFG HAS NULL Questions For ${singleCompany} : ${singleLevel} : Questions`);
+                            console.log(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For ${singleCompany} : ${singleLevel} : Questions`));
                         }
-
-                  }
+                    }
 
                 }
             }
@@ -189,18 +191,19 @@ exports.companyQuestionsCreator = (async ()=>{
             //-------------------------//
 
             function folderCheck(singleLevel,companyQuestionArr,singleCompany){
-                if (fs.existsSync("./"+singleCompany+"_Questions")) {
-                    pdfCreate(singleLevel,companyQuestionArr,singleCompany);
+                let folderPath = "./threeFinder_Downloads/"+singleCompany+"_Questions"
+                if (fs.existsSync(folderPath)) {
+                    pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany);
                 }else {
-                    fs.mkdirSync("./"+singleCompany+"_Questions");
-                    pdfCreate(singleLevel,companyQuestionArr,singleCompany);
+                    fs.mkdirSync(folderPath,{ recursive: true });
+                    pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany);
                 }
             };
 
             //------------------------//
-            function pdfCreate(singleLevel,companyQuestionArr,singleCompany){
+            function pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany){
                 const doc = new PDFDocument;
-                doc.pipe(fs.createWriteStream("./"+singleCompany+"_Questions/"+singleCompany+"_"+singleLevel+"_Questions"+'.pdf'))
+                doc.pipe(fs.createWriteStream(folderPath+"/"+singleCompany+"_"+singleLevel+"_Questions"+'.pdf'))
                     
                     doc.fontSize(22);
                     doc.text(`${singleCompany} : Questions : ${singleLevel}`);

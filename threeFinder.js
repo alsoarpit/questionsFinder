@@ -93,7 +93,7 @@ const { companyQuestionsCreator } = require('./companyQuestionsCreator');
                 else if(userSelectedAnswer=="Exit"){
                     process.exit(0);
                 }
-
+                
             });
     }
 
