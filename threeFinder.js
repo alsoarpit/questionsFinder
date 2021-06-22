@@ -7,9 +7,6 @@ const puppeteer = require('puppeteer');
 //const singleCompanyQuestions = require('./singleCompanyQuestions');
 const { companyQuestionsCreator } = require('./companyQuestionsCreator');
 
-// This For Running First Time (:rack:)
-( ()=>{
-
   // const threeFinderMenu =
     threeFinderMenu();
    
@@ -96,5 +93,3 @@ const { companyQuestionsCreator } = require('./companyQuestionsCreator');
                 
             });
     }
-
-})();
