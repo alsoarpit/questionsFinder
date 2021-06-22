@@ -188,7 +188,7 @@ exports.companyQuestionsCreator = (async ()=>{
 
             //Require For PDF CREATE
 
-            //-------------------------//
+            //---------------------------//
 
             function folderCheck(singleLevel,companyQuestionArr,singleCompany){
                 let folderPath = "./threeFinder_Downloads/"+singleCompany+"_Questions"
