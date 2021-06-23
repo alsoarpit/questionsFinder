@@ -8,9 +8,6 @@ const inquirer = require('inquirer');
 const PDFDocument = require('pdfkit');
 const doc = require('pdfkit');
 const { list } = require('pdfkit');
-
-
-
 exports.companyQuestionsCreator = (async ()=>{
 
     var browser = await puppeteer.launch({
@@ -124,16 +121,24 @@ exports.companyQuestionsCreator = (async ()=>{
 
                    var singleCompany = selectedCompanyArr[i];
                     if(selectedLevel==undefined){
-                        await inquirer.prompt([
+                        /* This Function Handle -> Level Loop for Each different company
+                         await is waiting for another await function*/
+                       await decideLevel();
+                       async function decideLevel(){
+                            await  inquirer.prompt([
                                 {
                                     type:"checkbox",
                                     name:"cbType",
-                                    message:"Select Any One From Given 'OPTIONS' Or You Can Also Select Multiple 'OPTIONS'",
+                                    message:chalk.bold(`${chalk.red(singleCompany)} Select Any ${chalk.red("ONE") } From Given 'OPTIONS' Or You Can Also Select ${chalk.red("Multiple 'OPTIONS'")}`),
                                     choices:["Easy","Medium","Hard"],
-                                },
-                            ]).then((ans)=>{
+                                }
+                            ]).then(async (ans)=>{
                                 selectedLevelArr = ans.cbType;
+                                if(selectedLevelArr.length==0){ 
+                                    await  decideLevel();
+                                }
                             });
+                       }                     
                   }else if(selectedLevel!=undefined){
                       selectedLevelArr[0]=selectedLevel;
                   }
