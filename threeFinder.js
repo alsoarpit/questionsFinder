@@ -9,9 +9,7 @@ const { companyQuestionsCreator } = require('./companyQuestionsCreator');
 
   // const threeFinderMenu =
     threeFinderMenu();
-   
      function threeFinderMenu(){
-
       CFonts.say("WELCOME TO - 3 FINDER", {
           font: 'tiny',                 // define the font face
           align: 'center',              // define text alignment

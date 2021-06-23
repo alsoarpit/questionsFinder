@@ -37,7 +37,6 @@ exports.companyQuestionsCreator = (async ()=>{
     });
     await userSelectedCompanyName();
      async function userSelectedCompanyName(){
-         console.log(allCompanyNameArr);
         await inquirer.prompt([
             {
                 type: 'checkbox-plus',
@@ -253,11 +252,8 @@ exports.companyQuestionsCreator = (async ()=>{
                     idx++;
                      i++;
                 }
-                return newArr;
+            return newArr;
             }
-
         });
     }
-
-    
 })
