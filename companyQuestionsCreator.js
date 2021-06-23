@@ -8,6 +8,10 @@ const inquirer = require('inquirer');
 const PDFDocument = require('pdfkit');
 const doc = require('pdfkit');
 const { list } = require('pdfkit');
+var fuzzy = require('fuzzy');
+
+
+inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'));
 exports.companyQuestionsCreator = (async ()=>{
 
     var browser = await puppeteer.launch({
@@ -30,16 +34,28 @@ exports.companyQuestionsCreator = (async ()=>{
             allCompanyNameArr[i] = allCompanyName[i].innerText;
         }
         return allCompanyNameArr;
-
     });
     await userSelectedCompanyName();
-     function userSelectedCompanyName(){
-         inquirer.prompt([
+     async function userSelectedCompanyName(){
+         console.log(allCompanyNameArr);
+        await inquirer.prompt([
             {
-                type:"checkbox",
-                name:"cbType",
-                message:chalk.bold(`Select Any ${chalk.bold.red('ONE')}`),
-                choices:allCompanyNameArr,
+                type: 'checkbox-plus',
+                name: 'cbType',
+                message: 'Select Company',
+                pageSize: 10,
+                highlight: true,
+                searchable: true,    
+                source: function(answersSoFar, input) {
+                  input = input || '';
+                  return new Promise(function(resolve) {              
+                    var fuzzyResult = fuzzy.filter(input, allCompanyNameArr);       
+                    var data = fuzzyResult.map(function(element) {
+                      return element.original;
+                    });            
+                    resolve(data);           
+                  });  
+                }
             }
         ]).then( (answers)=>{
 
