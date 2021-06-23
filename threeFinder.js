@@ -25,13 +25,13 @@ const { companyQuestionsCreator } = require('./companyQuestionsCreator');
           env: 'node'                 // define the environment CFonts is being executed in
       });
   
-      console.log(center((chalk.bgYellowBright.bold.black("The art is at your fingertips!!")),180));
+      console.log(center((chalk.bgYellowBright.bold.black("The art is at your fingertips!!")),169));
 
         inquirer.prompt([
               {
                   type:"list",
                   name:"lType",
-                  message:chalk.bold(`Select Any ${chalk.red("'ONE'")}`),
+                  message:chalk.bold(`Select Any ${chalk.red.bold("'ONE'")}`),
                   choices:["Question's Finder","Hospital Finder","Route Finder","Exit"],
               }
           ]).then((answer)=>{

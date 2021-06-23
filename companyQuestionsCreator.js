@@ -41,7 +41,7 @@ exports.companyQuestionsCreator = (async ()=>{
             {
                 type: 'checkbox-plus',
                 name: 'cbType',
-                message: 'Select Company',
+                message: chalk.bold(`${chalk.bold.red('Select  Any Company')} - You Can Also Select ${chalk.red.bold('Multiple')} Company`),
                 pageSize: 10,
                 highlight: true,
                 searchable: true,    
@@ -93,7 +93,7 @@ exports.companyQuestionsCreator = (async ()=>{
                         if(userSelectedAnswer=="Select Different LEVEL for Each Company"){
                             
                             createCompanyQuestions(selectedCompanyArr,selectedLevel);
-                        
+
                         }
                         else if(userSelectedAnswer=="EASY LEVEL Question For All Selected Company" || userSelectedAnswer=="MEDIUM LEVEL Question For All Selected Company" || userSelectedAnswer =="HARD LEVEL for Question For All Selected Company" ){
                             
@@ -101,7 +101,7 @@ exports.companyQuestionsCreator = (async ()=>{
                             else if(userSelectedAnswer.includes("MEDIUM")){selectedLevel = "Medium"}
                             else if(userSelectedAnswer.includes("HARD")){selectedLevel = "Hard"}
                             createCompanyQuestions(selectedCompanyArr,selectedLevel);
-                         //   console.log(chalk.bold.yellow("congratulations your work For Question Finding is Done"));
+                
                           //  console.log(chalk.bold.yellow("Thank You For Using threeFinder"));
 
                         }
@@ -109,11 +109,10 @@ exports.companyQuestionsCreator = (async ()=>{
 
                             inquirer.prompt([
                                 {
-
                                 type:"list",
                                 name:"lType",
                                 message:chalk.bold(`Select Any ${chalk.red('One')}`),
-                                choices:["Cancel This Option","Go Back","Go To Main Menu(ThreeFinder)","Exit"],
+                                choices:["Cancel This Option","Go Back","Exit"],
                                     
                                 }
                                 ]).then((answer)=>{
@@ -144,7 +143,7 @@ exports.companyQuestionsCreator = (async ()=>{
                                 {
                                     type:"checkbox",
                                     name:"cbType",
-                                    message:chalk.bold(`${chalk.red(singleCompany)} Select Any ${chalk.red("ONE") } From Given 'OPTIONS' Or You Can Also Select ${chalk.red("Multiple 'OPTIONS'")}`),
+                                    message:chalk.bold(`For ${chalk.red(singleCompany)} -  You Can Also Select ${chalk.red("Multiple")}'LEVEL'`),
                                     choices:["Easy","Medium","Hard"],
                                 }
                             ]).then(async (ans)=>{
@@ -204,6 +203,7 @@ exports.companyQuestionsCreator = (async ()=>{
                     }
 
                 }
+                console.log(chalk.bold.yellow("Thank You For Using threeFinder"));
             }
 
             //Require For PDF CREATE
