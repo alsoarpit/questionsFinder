@@ -1,4 +1,7 @@
 // "REQUIRERS"
+
+//check_update_line
+
 const CFonts = require('cfonts');
 const center = require('center-align');
 const chalk = require('chalk');
