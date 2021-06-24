@@ -225,11 +225,13 @@ exports.companyQuestionsCreator = (async ()=>{
                 const doc = new PDFDocument;
                 doc.pipe(fs.createWriteStream(folderPath+"/"+singleCompany+"_"+singleLevel+"_Questions"+'.pdf'))
                     
-                    doc.fontSize(22);
-                    doc.text(`${singleCompany} : Questions : ${singleLevel}`);
-                    doc.fontSize(18);
-                    doc.list(companyQuestionArr);
-                
+                    doc.font('./fonts/CascadiaCode-Bold.otf')
+                        .fontSize(22)
+                        .text(`${singleCompany} : Questions : ${singleLevel}`)
+                    doc.moveDown();
+                    doc.font('./fonts/CascadiaCode.ttf')
+                        .fontSize(18)
+                        .list(companyQuestionArr,{ listType: 'numbered' })
                 doc.end()
             }
             //-----------------------//
