@@ -18,13 +18,13 @@ exports.companyQuestionsCreator = (async ()=>{
         headless:false,
         defaultViewport: null,
         args: ["--start-maximized"],
-        slowMo : 30,
+        slowMo : 50,
     });
     let pagesArr = await browser.pages();
     var gPage=pagesArr[0];
     await gPage.goto("https://practice.geeksforgeeks.org/company-tags/");
     await gPage.waitForSelector(".well.table.whiteBgColor .text-center a b");
-    var allCompanyNameArr = await gPage.evaluate((companyCount)=>{
+    var allCompanyNameArr = await gPage.evaluate(()=>{
 
         let allCompanyName = document.querySelectorAll(
         ".well.table.whiteBgColor .text-center a b"

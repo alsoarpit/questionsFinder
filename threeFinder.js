@@ -4,8 +4,10 @@ const center = require('center-align');
 const chalk = require('chalk');
 const inquirer = require('inquirer');
 const puppeteer = require('puppeteer');
-//const singleCompanyQuestions = require('./singleCompanyQuestions');
+// const {topicWiseQuestion} = require('./topicWiseQuestion');
+//const {threeInOne} = require('./threeInOne');
 const { companyQuestionsCreator } = require('./companyQuestionsCreator');
+
 
   // const threeFinderMenu =
     threeFinderMenu();
@@ -48,7 +50,7 @@ const { companyQuestionsCreator } = require('./companyQuestionsCreator');
                                     type:"list",
                                     name:"lType",
                                     message:chalk.bold(`Select Any ${chalk.red('ONE')}`),
-                                    choices:["Company Related Question's GFG","Topic Wise Question's GFG","LeetCode Question Level Wise","Other Option","Exit"],
+                                    choices:["Company Related Question's GFG","Topic Wise Question's GFG","Company - Topic - Level (3 in 'ONE')","LeetCode Question Level Wise","Other Option","Exit"],
                                 }
                             ]).then((answer)=>{
 
@@ -56,7 +58,12 @@ const { companyQuestionsCreator } = require('./companyQuestionsCreator');
                                 if(userSelectedAnswer=="Company Related Question's GFG"){
                                     companyQuestionsCreator();
                                 }
-                                else if(userSelectedAnswer=="Topic Wise Question's GFG"){}
+                                else if(userSelectedAnswer=="Topic Wise Question's GFG"){
+                                      //topicWiseQuestion();
+                                }
+                                else if(userSelectedAnswer=="Company - Topic - Level (3 in 'ONE')"){
+/**--------Working Here-----*/       threeInOne();
+                                }
                                 else if(userSelectedAnswer=="LeetCode Question Level Wise"){}
                                 else if(userSelectedAnswer=="Other Option"){
                                     inquirer.prompt([
