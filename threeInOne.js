@@ -98,14 +98,14 @@ async function main(){
                                         return topicArr;
                                 });
 
+                                var  selectedTopic;
                                 await userSelectedTopic();
-                                    var  selectedTopic;
                                         async function userSelectedTopic(){
                                         let ans =  await inquirer.prompt([
                                                 {
                                                     type: 'checkbox-plus',
                                                     name: 'cbType',
-                                                    message: chalk.bold(`${chalk.bold.red('Select  Any Topic')} - You Can Also Select ${chalk.red.bold('Multiple')} Topic`),
+                                                    message: chalk.bold(`For ${chalk.yellow(singleCompany)} - ${chalk.bold.red('Select  Any Topic')} - You Can Also Select ${chalk.red.bold('Multiple')} Topic`),
                                                     pageSize: 10,
                                                     highlight: true,
                                                     searchable: true,    
@@ -136,8 +136,45 @@ async function main(){
                                         }else if((ans.cbType).length>0){
                                             selectedTopic = ans.cbType;
                                         }
+                                    }//function over
+                                console.log(selectedTopic);
+                                var  selectedTopicOptions;
+                                await allTopicORSingleWise();
+                                    async function allTopicORSingleWise(){
+                                        
+                                       let ans = await inquirer.prompt([
+                                            {
+                                                type:"list",
+                                                name:"lType",
+                                                message:chalk.bold(`For ${chalk.yellow(singleCompany)} - Select Any ${chalk.red('ONE')}`),
+                                                choices:["Company Topic Question Pdf - Topic Separately","Company Topic Question Pdf - Topic Combine","Both Options 1 And 2","Select Topic Again","Exit"],
+
+                                            }
+                                        ]);
+                                        
+                                         selectedTopicOptions = ans.lType;
+                                        if(selectedTopicOptions.length==0){
+                                            await allTopicORSingleWise();
+                                        }else if(selectedTopicOptions=="Select Topic Again"){
+                                             await userSelectedTopic();
+                                             await allTopicORSingleWise();
+                                        }else if(selectedTopicOptions=="Exit"){process.exit(0);}
+   
+                                            
                                     }
-                                   
+                                    
+                                    
+                                if(selectedTopicOptions=="Company Topic Question Pdf - Topic Separately"){
+                                                     console.log(selectedTopicOptions);
+                                                     console.log(selectedTopic);
+                                }else if(selectedTopicOptions=="Company Topic Question Pdf - Topic Combine"){
+                                        console.log(selectedTopicOptions);
+                                        console.log(selectedTopic);
+                                }else if(selectedTopicOptions=="Both Options 1 And 2"){
+                                    console.log(selectedTopicOptions);
+                                    console.log(selectedTopic);
+                                }
+
                             }
                         }
                     }
