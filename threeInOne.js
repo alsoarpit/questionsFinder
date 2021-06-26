@@ -99,32 +99,45 @@ async function main(){
                                 });
 
                                 await userSelectedTopic();
-
-                                    async function userSelectedTopic(){
-                                    await  inquirer.prompt([
-                                            {
-                                                type: 'checkbox-plus',
-                                                name: 'cbType',
-                                                message: chalk.bold(`${chalk.bold.red('Select  Any Topic')} - You Can Also Select ${chalk.red.bold('Multiple')} Topic`),
-                                                pageSize: 10,
-                                                highlight: true,
-                                                searchable: true,    
-                                                source: function(answersSoFar, input) {
-                                                input = input || '';
-                                                return new Promise(function(resolve) {              
-                                                    var fuzzyResult = fuzzy.filter(input, topicArr);       
-                                                    var data = fuzzyResult.map(function(element) {
-                                                    return element.original;
-                                                    });            
-                                                    resolve(data);           
-                                                });  
+                                    var  selectedTopic;
+                                        async function userSelectedTopic(){
+                                        let ans =  await inquirer.prompt([
+                                                {
+                                                    type: 'checkbox-plus',
+                                                    name: 'cbType',
+                                                    message: chalk.bold(`${chalk.bold.red('Select  Any Topic')} - You Can Also Select ${chalk.red.bold('Multiple')} Topic`),
+                                                    pageSize: 10,
+                                                    highlight: true,
+                                                    searchable: true,    
+                                                    source: function(answersSoFar, input) {
+                                                    input = input || '';
+                                                    return new Promise(function(resolve) {              
+                                                        var fuzzyResult = fuzzy.filter(input, topicArr);       
+                                                        var data = fuzzyResult.map(function(element) {
+                                                        return element.original;
+                                                        });            
+                                                        resolve(data);           
+                                                    });  
+                                                }
                                             }
+                                        ]);
+                                        if((ans.cbType).length==0) {
+                                            await inquirer.prompt([
+                                                {
+                                                    type:"list",
+                                                    name:"lType",
+                                                    message:chalk.bold(`${chalk.yellow('OOPS!! Selected Nothing')} Select Any ${chalk.bold.red('ONE')}`),
+                                                    choices:["Select Company Again","Exit"],
+                                                }
+                                            ]).then( async (answers)=>{
+                                                if(answers.lType == "Exit"){process.exit(0);}
+                                                await userSelectedTopic();
+                                            })
+                                        }else if((ans.cbType).length>0){
+                                            selectedTopic = ans.cbType;
                                         }
-                                    ]).then( (answers)=>{
-                                        var selectedTopicArr = answers.cbType;
-                                        console.log( selectedTopicArr);        
-                                    });
-                                }
+                                    }
+                                   
                             }
                         }
                     }
