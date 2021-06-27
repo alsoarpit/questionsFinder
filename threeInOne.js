@@ -8,9 +8,10 @@ const PDFDocument = require('pdfkit');
 const doc = require('pdfkit');
 const { list } = require('pdfkit');
 var fuzzy = require('fuzzy');
-
+const {threeInOneCreator} = require('./threeInOneCreator')
 
 inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'));
+
 
 // exports.threeInOne = 
 main();
@@ -20,13 +21,13 @@ async function main(){
             headless:false,
             defaultViewport: null,
             args: ["--start-maximized"],
-            slowMo : 50,
+            slowMo : 80,
         });
         let pagesArr = await browser.pages();
         var gPage=pagesArr[0];
         await gPage.goto("https://practice.geeksforgeeks.org/company-tags/");
         await gPage.waitForSelector(".well.table.whiteBgColor .text-center a b");
-        var allCompanyNameArr = await gPage.evaluate((companyCount)=>{
+        var allCompanyNameArr = await gPage.evaluate(()=>{
 
             let allCompanyName = document.querySelectorAll(
             ".well.table.whiteBgColor .text-center a b"
@@ -90,10 +91,13 @@ async function main(){
                                         await document.querySelector('[href="#collapse4"] .panel-title').click();
                                         await document.querySelector('#moreCategories').click()
                                         await new Promise(function(resolve) {setTimeout(resolve, 500)});
-                                        let topic = await document.querySelectorAll('.checkbox.row.display-flex.company-modal label');
+                    
+                                        let topic = await document.querySelectorAll('.checkbox.row.display-flex.company-modal input');
+                                        
                                         let topicArr = [];
                                         for(i=0;i<topic.length;i++){
-                                            topicArr[i] = topic[i].innerText.trim();
+                                            topicArr[i] = topic[i].getAttribute('value');
+                        
                                         }
                                         return topicArr;
                                 });
@@ -165,11 +169,85 @@ async function main(){
                                     
                                     
                                 if(selectedTopicOptions=="Company Topic Question Pdf - Topic Separately"){
-                                                     console.log(selectedTopicOptions);
-                                                     console.log(selectedTopic);
+                                                    var userSelectedLevelOptions; 
+                                                     await levelOptions();
+                                                     async function levelOptions(){
+                                                        let ans = await inquirer.prompt([
+                                                            
+                                                            {
+                                                                type:"list",
+                                                                name:"lType",
+                                                                message:chalk.bold(`For ${chalk.yellow(singleCompany)} - Select Any ${chalk.red('ONE')}`),
+                                                                choices:[`Select Different Level For each Topic For ${singleCompany}`,
+                                                                    `Without Level (Random) For ${singleCompany}`,
+                                                                    `Easy Level For All Topics For ${singleCompany}`,
+                                                                    `Medium Level For All Topics For ${singleCompany}`,
+                                                                    `Hard Level For All Topics For ${singleCompany}`,
+                                                                    "Exit"],
+                                                            }
+
+                                                        ]);
+                                                        if(ans.lType==`Hard Level For All Topics For ${singleCompany}`){
+                                                             userSelectedLevelOptions = "Hard";
+                                                         }
+                                                        else if(ans.lType==`Easy Level For All Topics For ${singleCompany}`){
+                                                            userSelectedLevelOptions ="Easy";
+                                                        }
+                                                        else if(ans.lType==`Medium Level For All Topics For ${singleCompany}`){
+                                                            userSelectedLevelOptions ="Medium";
+                                                        }else if(ans.lType==`Without Level (Random) For ${singleCompany}`){
+                                                            userSelectedLevelOptions ="Without";
+                                                        }else if(ans.lType==`Select Different Level For each Topic For ${singleCompany}`){
+                                                            userSelectedLevelOptions="Random";
+                                                        }
+                                            
+                                                     }
+                                                    ///working here
+                                                     
+                                                     await threeInOneCreator(gPage,singleCompany,selectedTopic,userSelectedLevelOptions,selectedTopicOptions);
+                                                    //
+                                                    
+
                                 }else if(selectedTopicOptions=="Company Topic Question Pdf - Topic Combine"){
-                                        console.log(selectedTopicOptions);
-                                        console.log(selectedTopic);
+                                        
+                                    var userSelectedLevelOptions; 
+                                    await levelOptions();
+                                    async function levelOptions(){
+                                       let ans = await inquirer.prompt([
+                                           
+                                           {
+                                               type:"list",
+                                               name:"lType",
+                                               message:chalk.bold(`For ${chalk.yellow(singleCompany)} - Select Any ${chalk.red('ONE')}`),
+                                               choices:[`Select Different Level For each Topic For ${singleCompany}`,
+                                                   `Without Level (Random) For ${singleCompany}`,
+                                                   `Easy Level For All Topics For ${singleCompany}`,
+                                                   `Medium Level For All Topics For ${singleCompany}`,
+                                                   `Hard Level For All Topics For ${singleCompany}`,
+                                                   "Exit"],
+                                           }
+
+                                       ]);
+                                       if(ans.lType==`Hard Level For All Topics For ${singleCompany}`){
+                                            userSelectedLevelOptions = "Hard";
+                                        }
+                                       else if(ans.lType==`Easy Level For All Topics For ${singleCompany}`){
+                                           userSelectedLevelOptions ="Easy";
+                                       }
+                                       else if(ans.lType==`Medium Level For All Topics For ${singleCompany}`){
+                                           userSelectedLevelOptions ="Medium";
+                                       }else if(ans.lType==`Without Level (Random) For ${singleCompany}`){
+                                           userSelectedLevelOptions ="Without";
+                                       }else if(ans.lType==`Select Different Level For each Topic For ${singleCompany}`){
+                                           userSelectedLevelOptions="Random";
+                                       }
+                           
+                                    }
+                                   ///working here
+                                    
+                                    await threeInOneCreator(gPage,singleCompany,selectedTopic,userSelectedLevelOptions,selectedTopicOptions);
+                                   //
+
                                 }else if(selectedTopicOptions=="Both Options 1 And 2"){
                                     console.log(selectedTopicOptions);
                                     console.log(selectedTopic);
