@@ -198,7 +198,7 @@ async function main(){
                                                         }else if(ans.lType==`Without Level (Random) For ${singleCompany}`){
                                                             userSelectedLevelOptions ="Without";
                                                         }else if(ans.lType==`Select Different Level For each Topic For ${singleCompany}`){
-                                                            userSelectedLevelOptions="Random";
+                                                            userSelectedLevelOptions="eachTime";
                                                         }
                                             
                                                      }
@@ -239,7 +239,7 @@ async function main(){
                                        }else if(ans.lType==`Without Level (Random) For ${singleCompany}`){
                                            userSelectedLevelOptions ="Without";
                                        }else if(ans.lType==`Select Different Level For each Topic For ${singleCompany}`){
-                                           userSelectedLevelOptions="Random";
+                                           userSelectedLevelOptions="eachTime";
                                        }
                            
                                     }

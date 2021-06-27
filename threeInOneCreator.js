@@ -30,27 +30,54 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                     await  setTimeout(async() =>{  
                         await document.querySelector('#moreCategories').click()
                         },1000)
-                    await  setTimeout(() =>{  
-                        document.querySelector(`.checkbox.row.display-flex.company-modal input[value=${selectedTopic[i]}]`).click();
+                    
+                    await  setTimeout(async() =>{  
+                                await document.querySelector(`.checkbox.row.display-flex.company-modal input[value=${singleTopic}]`).click();
+
                     },1000)
+
+                    await setTimeout(async() =>{
+                        await document.querySelector('#selectCategoryModal .modal-body [class="close"]').click();
+                    },2000)
             
                 },singleTopic);
-                var globalLevel ;
-                if(userSelectedLevelOptions=="Without"){}
-                else if(userSelectedLevelOptions=="Hard"){globalLevel="Hard"}
-                else if(userSelectedLevelOptions=="Easy"){globalLevel="Easy"}
-                else if(userSelectedLevelOptions=="Medium"){globalLevel="Medium"}
-                else if(userSelectedLevelOptions=="Random"){
-                    await globalLevelSelector();
-                    async function globalLevelSelector(){
-                        let ans = await inquirer.prompt([
-                            {
-                                
-                            }
-                        ])
-                    }
+
+                var globalLevel=[];
+                console.log(userSelectedLevelOptions);
+                if(userSelectedLevelOptions=="eachTime"){
+                        await decideLevel();
+                        async function decideLevel(){
+                            let ans = await  inquirer.prompt([
+                                {
+                                    type:"checkbox",
+                                    name:"cbType",
+                                    message:chalk.bold(`For ${chalk.red(singleCompany)} -  You Can Also Select ${chalk.red("Multiple")}'LEVEL'`),
+                                    choices:["Easy","Medium","Hard"],
+                                }
+                            ]);
+                            globalLevel= ans.cbType;
+                            if(globalLevel.length==0){
+                                console.log(chalk.yellow(`Oops! Selected Nothing`))
+                                await  decideLevel();
+                            } 
+                        } 
+                }
+                else if(userSelectedLevelOptions=="Hard"){
+                    globalLevel[0]="Hard"
+
+                }
+                else if(userSelectedLevelOptions=="Easy"){
+                    globalLevel[0]="Easy"
+                }
+                else if(userSelectedLevelOptions=="Medium"){
+                    globalLevel[0]="Medium"
+                }
+                else if(userSelectedLevelOptions=="Without"){
+                    globalLevel[0]="Without"
                 }
 
+                console.log(globalLevel);
+                
 
         }
 
@@ -66,14 +93,54 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                 },1000);
                 await setTimeout(async() =>{
                     for(let i = 0; i <selectedTopic.length; i++){
-                        setTimeout(() =>{
-                            document.querySelector(`.checkbox.row.display-flex.company-modal input[value=${selectedTopic[i]}]`).click();
-                        },3000)
+                        setTimeout(async() =>{
+                            await document.querySelector(`.checkbox.row.display-flex.company-modal input[value=${selectedTopic[i]}]`).click();
+                        },1000)
                     }
                 },1000);
 
+                await setTimeout(async() =>{
+                    await document.querySelector('#selectCategoryModal .modal-body [class="close"]').click();
+                },2000);
+
             
             },selectedTopic);
+            var globalLevel=[];
+                console.log(userSelectedLevelOptions);
+                if(userSelectedLevelOptions=="eachTime"){
+                        await decideLevel();
+                        async function decideLevel(){
+                            let ans = await  inquirer.prompt([
+                                {
+                                    type:"checkbox",
+                                    name:"cbType",
+                                    message:chalk.bold(`For ${chalk.red(singleCompany)} -  You Can Also Select ${chalk.red("Multiple")}'LEVEL'`),
+                                    choices:["Easy","Medium","Hard"],
+                                }
+                            ]);
+                            globalLevel= ans.cbType;
+                            if(globalLevel.length==0){
+                                console.log(chalk.yellow(`Oops! Selected Nothing`))
+                                await  decideLevel();
+                            } 
+                        } 
+                }
+                else if(userSelectedLevelOptions=="Hard"){
+                    globalLevel[0]="Hard"
+
+                }
+                else if(userSelectedLevelOptions=="Easy"){
+                    globalLevel[0]="Easy"
+                }
+                else if(userSelectedLevelOptions=="Medium"){
+                    globalLevel[0]="Medium"
+                }
+                else if(userSelectedLevelOptions=="Without"){
+                    globalLevel[0]="Without"
+                }
+
+                console.log(globalLevel);
+                
     }
     
 }
