@@ -150,6 +150,10 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
         
 
                 var globalLevel=[];
+                var singlePdfString ="";
+                        for(let i = 0; i < selectedTopicForPdf.length;i++){
+                            singlePdfString += selectedTopicForPdf[i]+"_"
+                        }
                     
                 if(userSelectedLevelOptions=="eachTime"){
 
@@ -159,7 +163,7 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                                 {
                                     type:"checkbox",
                                     name:"cbType",
-                                    message:chalk.bold(`For ${chalk.red(singleCompany)} -  You Can Also Select ${chalk.red("Multiple")}'LEVEL'`),
+                                    message:chalk.bold(`For ${chalk.red(singleCompany)} : ${singlePdfString}-  You Can Also Select ${chalk.red("Multiple")}'LEVEL'`),
                                     choices:["Easy","Medium","Hard"],
                                 }
                             ]);
@@ -179,6 +183,7 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                 for(let j = 0; j <globalLevel.length; j++){
 
                     var singleLevel = globalLevel[j];
+                    
                     
                     await gPage.goto("https://practice.geeksforgeeks.org/company/"+singleCompany+"/");
                         await gPage.evaluate((selectedTopic) => {                 
@@ -259,10 +264,7 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                         });
                         let companyQuestionArr = fixArr(companyQuestionsArrNotProper);
                         
-                        let singlePdfString ="";
-                        for(let i = 0; i < selectedTopicForPdf.length;i++){
-                            singlePdfString += selectedTopicForPdf[i]+"_"
-                        }
+                        
                         if(companyQuestionArr.length!=0){
                             await folderCheck(singleLevel,companyQuestionArr,singleCompany,singlePdfString);
                             console.log(chalk.bold.yellow(`Congratulations QuestionsPDF For ${singleCompany} : ${singlePdfString} : ${singleLevel} Level has been Created` ));
