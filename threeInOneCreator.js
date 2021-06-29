@@ -142,7 +142,8 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                                         console.log(chalk.bold.yellow(`Congratulations QuestionsPDF For ${singleCompany} : ${singleTopicPdf} : ${singleLevel} Level has been Created` ));
                                     }else{
                                         console.log(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For ${singleCompany} : ${singleTopicPdf} :${singleLevel} : Questions`));
-                                    }       
+                                    }  
+
                     }
         }
 
@@ -163,7 +164,7 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                                 {
                                     type:"checkbox",
                                     name:"cbType",
-                                    message:chalk.bold(`For ${chalk.red(singleCompany)} : ${singlePdfString}-  You Can Also Select ${chalk.red("Multiple")}'LEVEL'`),
+                                    message:chalk.bold(`For ${chalk.yellow(singleCompany)} : ${singlePdfString} : You Can Also Select ${chalk.red("Multiple")}'LEVEL'`),
                                     choices:["Easy","Medium","Hard"],
                                 }
                             ]);
@@ -278,13 +279,13 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                 
     }//---------------------loop over --------------------------------//
     
-
+    console.log(center((chalk.bgRedBright.bold.black("\n Thank You For Using questionsFinder ")),125));
 
         
             //---------------------------//
 
             function folderCheck(singleLevel,companyQuestionArr,singleCompany,singleTopic){
-                let folderPath = "./threeFinder_Downloads/"+singleCompany+"_Questions"
+                let folderPath = "./threeFinder_Downloads/threeInOne/"+singleCompany+"_Questions"
                 if (fs.existsSync(folderPath)) {
                     pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,singleTopic);
                 }else {

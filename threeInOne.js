@@ -8,14 +8,10 @@ const PDFDocument = require('pdfkit');
 const doc = require('pdfkit');
 const { list } = require('pdfkit');
 var fuzzy = require('fuzzy');
-const {threeInOneCreator} = require('./threeInOneCreator')
-
+const {threeInOneCreator} = require('./threeInOneCreator');
 inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'));
 
-
-// exports.threeInOne = 
-main();
-async function main(){
+ exports.threeInOne = async function main(){
 
         var browser = await puppeteer.launch({
             headless:false,
@@ -141,7 +137,7 @@ async function main(){
                                             selectedTopic = ans.cbType;
                                         }
                                     }//function over
-                                console.log(selectedTopic);
+                 
                                 var  selectedTopicOptions;
                                 await allTopicORSingleWise();
                                     async function allTopicORSingleWise(){
@@ -246,5 +242,4 @@ async function main(){
                     }
                 })
             }
-
 }

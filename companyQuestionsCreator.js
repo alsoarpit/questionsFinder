@@ -91,9 +91,7 @@ exports.companyQuestionsCreator = (async ()=>{
                         var selectedLevel;
                         
                         if(userSelectedAnswer=="Select Different LEVEL for Each Company"){
-                            
                             createCompanyQuestions(selectedCompanyArr,selectedLevel);
-
                         }
                         else if(userSelectedAnswer=="EASY LEVEL Question For All Selected Company" || userSelectedAnswer=="MEDIUM LEVEL Question For All Selected Company" || userSelectedAnswer =="HARD LEVEL for Question For All Selected Company" ){
                             
@@ -101,8 +99,6 @@ exports.companyQuestionsCreator = (async ()=>{
                             else if(userSelectedAnswer.includes("MEDIUM")){selectedLevel = "Medium"}
                             else if(userSelectedAnswer.includes("HARD")){selectedLevel = "Hard"}
                             createCompanyQuestions(selectedCompanyArr,selectedLevel);
-                
-                          //  console.log(chalk.bold.yellow("Thank You For Using threeFinder"));
 
                         }
                         else if(userSelectedAnswer=="Other Option"){
@@ -119,7 +115,6 @@ exports.companyQuestionsCreator = (async ()=>{
                                     let userSelectedAnswer = answer.lType;
                                     if(userSelectedAnswer=="Cancel This Option"){ companyLevel();}
                                     else if(userSelectedAnswer=="Go Back"){ userSelectedCompanyName();}
-                                    //else if(userSelectedAnswer=="Go To Main Menu(ThreeFinder)"){/*ThreeFinderMenu();*/}
                                     else if(userSelectedAnswer=="Exit"){process.exit(0);}
                                 });
                         }
@@ -197,20 +192,20 @@ exports.companyQuestionsCreator = (async ()=>{
 
                         if(companyQuestionArr.length!=0){
                             await folderCheck(singleLevel,companyQuestionArr,singleCompany);
-                            console.log(chalk.bold.yellow(`Congratulations QuestionsPDF For ${singleCompany}  ${singleLevel} Level has been Created` ));
+                            console.log(chalk.bold.yellow(`Congratulations questionsPDF For ${singleCompany} ${singleLevel} Level has been Created` ));
                         }else{
                             console.log(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For ${singleCompany} : ${singleLevel} : Questions`));
                         }
                     }
                 }
-                console.log(chalk.bold.yellow("Thank You For Using threeFinder"));
+                console.log(center((chalk.bgRedBright.bold.black("\n Thank You For Using questionsFinder ")),125));
             }
             //Require For PDF CREATE
 
             //---------------------------//
 
             function folderCheck(singleLevel,companyQuestionArr,singleCompany){
-                let folderPath = "./threeFinder_Downloads/"+singleCompany+"_Questions"
+                let folderPath = "./questionsFinder_Downloads/companyRelatedQuestions/"+singleCompany+"_Questions"
                 if (fs.existsSync(folderPath)) {
                     pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany);
                 }else {
