@@ -37,7 +37,7 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                                     {
                                         type:"checkbox",
                                         name:"cbType",
-                                        message:chalk.bold(`For ${chalk.red(singleCompany)} -  You Can Also Select ${chalk.red("Multiple")}'LEVEL'`),
+                                        message:chalk.bold(`For ${chalk.red(singleCompany)} : ${chalk.red(singleTopicPdf)} -  You Can Also Select ${chalk.red("Multiple")}'LEVEL'`),
                                         choices:["Easy","Medium","Hard"],
                                     }
 
@@ -55,13 +55,13 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                     }else if(userSelectedLevelOptions=="Medium"){
                         globalLevel[0]="Medium";
                     }else if(userSelectedLevelOptions=="Without"){
-                        globalLevel[0]="Without";
+                        globalLevel[0]="WithoutLevel";
                     }
 
 
                     for(let j = 0; j <globalLevel.length;j++){
                             var singleLevel = globalLevel[j];
-                            console.log(singleLevel);
+                            
                             await gPage.goto("https://practice.geeksforgeeks.org/company/"+singleCompany+"/");
                             await gPage.evaluate(async(singleTopic) => {                 
 
@@ -112,7 +112,7 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                                             document.querySelector("[name='difficulty[]'][value='2']").click();
                                         },1000);
                                     });
-                                }else if(globalLevel[j]=="Without"){
+                                }else if(globalLevel[j]=="WithoutLevel"){
                                     await gPage.waitForTimeout(2000);
                                 }  
                             
@@ -135,51 +135,24 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                                         return allCompanyQuestionArr;
                                         
                                     });
-
                                     let companyQuestionArr = fixArr(companyQuestionsArrNotProper);
-                                    // console.log(companyQuestionArr);
 
                                     if(companyQuestionArr.length!=0){
-                                        console.log(singleLevel);
-                                        console.log(singleTopicPdf);
                                         await folderCheck(singleLevel,companyQuestionArr,singleCompany,singleTopicPdf);
                                         console.log(chalk.bold.yellow(`Congratulations QuestionsPDF For ${singleCompany} : ${singleTopicPdf} : ${singleLevel} Level has been Created` ));
                                     }else{
                                         console.log(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For ${singleCompany} : ${singleTopicPdf} :${singleLevel} : Questions`));
-                                    }
-                            
-                            
+                                    }       
                     }
         }
 
     }else if(selectedTopicOptions=="Company Topic Question Pdf - Topic Combine"){
-        await gPage.goto("https://practice.geeksforgeeks.org/company/"+singleCompany+"/");
-                await gPage.evaluate((selectedTopic) => {                 
-                        
-                    setTimeout(() =>{
-                        document.querySelector('[href="#collapse4"] .panel-title').click();
-                },1000);
-                    setTimeout(() =>{
-                        document.querySelector('#moreCategories').click();
-                },1000);
-                    setTimeout(() =>{
-                    for(let i = 0; i <selectedTopic.length; i++){
-                        setTimeout(() =>{
-                                document.querySelector(`.checkbox.row.display-flex.company-modal input[value=${selectedTopic[i]}]`).click();
-                        },1000)
-                    }
-                },2000);
-                
-                setTimeout(() =>{
-                        document.querySelector('#selectCategoryModal .modal-body [class="close"]').click();
-                },2000);
-                
-                
-            },selectedTopic);
+        
 
-            var globalLevel=[];
-                console.log(userSelectedLevelOptions);
+                var globalLevel=[];
+                    
                 if(userSelectedLevelOptions=="eachTime"){
+
                         await decideLevel();
                         async function decideLevel(){
                             let ans = await  inquirer.prompt([
@@ -198,10 +171,110 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                         } 
                 }
                 else if(userSelectedLevelOptions=="Without"){
-                    globalLevel[0]="Without"
+                    globalLevel[0]="WithoutLevel"
                 }
 
-    }
+                await gPage.waitForTimeout(2000);
+                
+                for(let j = 0; j <globalLevel.length; j++){
+
+                    var singleLevel = globalLevel[j];
+                    
+                    await gPage.goto("https://practice.geeksforgeeks.org/company/"+singleCompany+"/");
+                        await gPage.evaluate((selectedTopic) => {                 
+                                
+                            setTimeout(() =>{
+                                document.querySelector('[href="#collapse4"] .panel-title').click();
+                        },1000);
+                            setTimeout(() =>{
+                                document.querySelector('#moreCategories').click();
+                        },1000);
+                            setTimeout(() =>{
+                            for(let i = 0; i <selectedTopic.length; i++){
+                                setTimeout(() =>{
+                                        document.querySelector(`.checkbox.row.display-flex.company-modal input[value=${selectedTopic[i]}]`).click();
+                                },1000)
+                            }
+                        },2000);
+                        
+                        setTimeout(() =>{
+                                document.querySelector('#selectCategoryModal .modal-body [class="close"]').click();
+                        },2000);
+                        
+                        
+                    },selectedTopic);
+
+
+                    await gPage.waitForTimeout(5000);
+
+                        if(globalLevel[j] =="Easy"){
+                            await gPage.evaluate( ()=>{
+                                setTimeout(() =>{
+                                    document.querySelector('.panel-body[href="#collapse1"]').click();
+                                },1000);
+                                setTimeout(() =>{
+                                    document.querySelector("[name='difficulty[]'][value='0']").click();
+                                },1000);
+                            });
+                        }else if(globalLevel[j] =="Medium"){
+
+                            await gPage.evaluate( ()=>{
+                                setTimeout(()=>{
+                                    document.querySelector('.panel-body[href="#collapse1"]').click();
+                                },1000);
+                                setTimeout(()=>{
+                                    document.querySelector("[name='difficulty[]'][value='1']").click();
+                                },1000);
+                            });
+                        }else if(globalLevel[j] =="Hard"){
+                            await gPage.evaluate(  ()=>{
+                                setTimeout(()=>{
+                                    document.querySelector('.panel-body[href="#collapse1"]').click();
+                                },1000);
+                                setTimeout(()=>{
+                                    document.querySelector("[name='difficulty[]'][value='2']").click();
+                                },1000);
+                            });
+                        }
+                        else if(globalLevel[j]=="WithoutLevel"){
+                            await gPage.waitForTimeout(2000);
+                        }  
+                        
+                        await gPage.waitForTimeout(2000);
+                        await scrollToBottom();
+                        let companyQuestionsArrNotProper = await gPage.evaluate(()=>{
+                            
+                            let allCpyQues = document.querySelectorAll(
+                                    ".panel-body span"
+                            );
+                            let allCompanyQuestionArr=[];
+                            // cant Do Direct Because its not ARR its Type of Arr :-
+
+                            for(let i=0;i<allCpyQues.length;i++){
+                                allCompanyQuestionArr[i] = allCpyQues[i].innerHTML;
+                            }
+                            
+                            return allCompanyQuestionArr;
+                            
+                        });
+                        let companyQuestionArr = fixArr(companyQuestionsArrNotProper);
+                        
+                        let singlePdfString ="";
+                        for(let i = 0; i < selectedTopicForPdf.length;i++){
+                            singlePdfString += selectedTopicForPdf[i]+"_"
+                        }
+                        if(companyQuestionArr.length!=0){
+                            await folderCheck(singleLevel,companyQuestionArr,singleCompany,singlePdfString);
+                            console.log(chalk.bold.yellow(`Congratulations QuestionsPDF For ${singleCompany} : ${singlePdfString} : ${singleLevel} Level has been Created` ));
+                        }else{
+                            console.log(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For ${singleCompany} : ${singlePdfString} :${singleLevel} : Questions`));
+                        }   
+
+
+
+                }
+                
+    }//---------------------loop over --------------------------------//
     
 
 
