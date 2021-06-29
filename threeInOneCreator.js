@@ -12,27 +12,35 @@ inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'
 
 exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelectedTopic,userSelectedLevelOptions,selectedTopicOptions){
        
-    let  selectedTopic = []; // ' selectedTopic ' this upper notation is added because 
+    let  selectedTopic = [];
+    let selectedTopicForPdf = [];
+    // ' selectedTopic ' this upper notation is added because 
     //it was creating error while  selecting topicName - because its having space
     for(let i = 0; i <notPerfectSelectedTopic.length; i++){
         selectedTopic[i] ='"'+notPerfectSelectedTopic[i]+'"';
+        selectedTopicForPdf[i] = notPerfectSelectedTopic[i].trim();
     }
   
     if(selectedTopicOptions=="Company Topic Question Pdf - Topic Separately"){
         for(let i = 0; i <selectedTopic.length; i++){
+
                 var singleTopic = selectedTopic[i];
+
+                var singleTopicPdf = selectedTopicForPdf[i];
 
                     var globalLevel=[];
                     if(userSelectedLevelOptions=="eachTime"){
                             await decideLevel();
                             async function decideLevel(){
                                 let ans = await  inquirer.prompt([
+                                                                        
                                     {
                                         type:"checkbox",
                                         name:"cbType",
                                         message:chalk.bold(`For ${chalk.red(singleCompany)} -  You Can Also Select ${chalk.red("Multiple")}'LEVEL'`),
                                         choices:["Easy","Medium","Hard"],
                                     }
+
                                 ]);
                                 globalLevel= ans.cbType;
                                 if(globalLevel.length==0){
@@ -52,7 +60,8 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
 
 
                     for(let j = 0; j <globalLevel.length;j++){
-
+                            var singleLevel = globalLevel[j];
+                            console.log(singleLevel);
                             await gPage.goto("https://practice.geeksforgeeks.org/company/"+singleCompany+"/");
                             await gPage.evaluate(async(singleTopic) => {                 
 
@@ -104,8 +113,42 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                                         },1000);
                                     });
                                 }else if(globalLevel[j]=="Without"){
-                                    await gPage.waitForTimeout(3000);
+                                    await gPage.waitForTimeout(2000);
                                 }  
+                            
+                                await gPage.waitForTimeout(3000);
+
+                                await scrollToBottom();
+
+                                    let companyQuestionsArrNotProper = await gPage.evaluate(()=>{
+                            
+                                        let allCpyQues = document.querySelectorAll(
+                                                ".panel-body span"
+                                        );
+                                        let allCompanyQuestionArr=[];
+                                        // cant Do Direct Because its not ARR its Type of Arr :-
+
+                                        for(let i=0;i<allCpyQues.length;i++){
+                                            allCompanyQuestionArr[i] = allCpyQues[i].innerHTML;
+                                        }
+                                        
+                                        return allCompanyQuestionArr;
+                                        
+                                    });
+
+                                    let companyQuestionArr = fixArr(companyQuestionsArrNotProper);
+                                    // console.log(companyQuestionArr);
+
+                                    if(companyQuestionArr.length!=0){
+                                        console.log(singleLevel);
+                                        console.log(singleTopicPdf);
+                                        await folderCheck(singleLevel,companyQuestionArr,singleCompany,singleTopicPdf);
+                                        console.log(chalk.bold.yellow(`Congratulations QuestionsPDF For ${singleCompany} : ${singleTopicPdf} : ${singleLevel} Level has been Created` ));
+                                    }else{
+                                        console.log(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For ${singleCompany} : ${singleTopicPdf} :${singleLevel} : Questions`));
+                                    }
+                            
+                            
                     }
         }
 
@@ -133,6 +176,7 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                 
                 
             },selectedTopic);
+
             var globalLevel=[];
                 console.log(userSelectedLevelOptions);
                 if(userSelectedLevelOptions=="eachTime"){
@@ -157,8 +201,66 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                     globalLevel[0]="Without"
                 }
 
-                console.log(globalLevel);
-                
     }
     
+
+
+        
+            //---------------------------//
+
+            function folderCheck(singleLevel,companyQuestionArr,singleCompany,singleTopic){
+                let folderPath = "./threeFinder_Downloads/"+singleCompany+"_Questions"
+                if (fs.existsSync(folderPath)) {
+                    pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,singleTopic);
+                }else {
+                    fs.mkdirSync(folderPath,{ recursive: true });
+                    pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,singleTopic);
+                }
+            };
+
+            //------------------------//
+            function pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,singleTopic){
+                const doc = new PDFDocument;
+                doc.pipe(fs.createWriteStream(folderPath+"/"+singleCompany+"_"+singleTopic+"_"+singleLevel+"_Questions"+'.pdf'))
+                    
+                    doc.font('./fonts/CascadiaCode-Bold.otf')
+                        .fontSize(22)
+                        .text(`${singleCompany} : Questions : ${singleTopic} : ${singleLevel} : GFG`)
+                    doc.moveDown();
+                    doc.font('./fonts/CascadiaCode.ttf')
+                        .fontSize(18)
+                        .list(companyQuestionArr,{ listType: 'numbered' })
+                doc.end()
+            }
+            //-----------------------//
+
+            
+    //-----------------------//
+
+    async function scrollToBottom() {
+        const distance = 60;
+        while (await gPage.evaluate(() => document.scrollingElement.scrollTop + window.innerHeight < document.scrollingElement.scrollHeight)) {
+        await gPage.evaluate((y) => { document.scrollingElement.scrollBy(0, y); }, distance);
+        await gPage.waitForTimeout(500);
+        }
+    }
+
+    //-----------------------//
+
+        function fixArr(Arr){
+            let arrLen = Arr.length-1;
+            let newArr=[]
+            let idx=0;
+            for(let i=0;i<=arrLen;i++){
+                newArr[idx]=Arr[i];
+                idx++;
+                i++;
+            }
+            return newArr;
+        }
+
+    //---------------------//
+
+
+
 }

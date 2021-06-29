@@ -181,16 +181,17 @@ exports.companyQuestionsCreator = (async ()=>{
                     await scrollToBottom();
 
                     let companyQuestionsArrNotProper = await gPage.evaluate(()=>{
+                        
                         let allCpyQues = document.querySelectorAll(
                                 ".panel-body span"
-                            );
+                        );
                         let allCompanyQuestionArr=[];
                         // cant Do Direct Because its not ARR its Type of Arr :-
                         for(let i=0;i<allCpyQues.length;i++){
                             allCompanyQuestionArr[i] = allCpyQues[i].innerHTML;
-                            
                         }
                         return allCompanyQuestionArr;
+
                     });
                     let companyQuestionArr = fixArr(companyQuestionsArrNotProper);
 
@@ -201,11 +202,9 @@ exports.companyQuestionsCreator = (async ()=>{
                             console.log(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For ${singleCompany} : ${singleLevel} : Questions`));
                         }
                     }
-
                 }
                 console.log(chalk.bold.yellow("Thank You For Using threeFinder"));
             }
-
             //Require For PDF CREATE
 
             //---------------------------//
@@ -227,7 +226,7 @@ exports.companyQuestionsCreator = (async ()=>{
                     
                     doc.font('./fonts/CascadiaCode-Bold.otf')
                         .fontSize(22)
-                        .text(`${singleCompany} : Questions : ${singleLevel}`)
+                        .text(`${singleCompany} : Questions : ${singleLevel} : GFG`)
                     doc.moveDown();
                     doc.font('./fonts/CascadiaCode.ttf')
                         .fontSize(18)
