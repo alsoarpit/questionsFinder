@@ -21,7 +21,7 @@ async function main(){
             headless:false,
             defaultViewport: null,
             args: ["--start-maximized"],
-            slowMo : 80,
+            slowMo : 100,
         });
         let pagesArr = await browser.pages();
         var gPage=pagesArr[0];
@@ -151,7 +151,7 @@ async function main(){
                                                 type:"list",
                                                 name:"lType",
                                                 message:chalk.bold(`For ${chalk.yellow(singleCompany)} - Select Any ${chalk.red('ONE')}`),
-                                                choices:["Company Topic Question Pdf - Topic Separately","Company Topic Question Pdf - Topic Combine","Both Options 1 And 2","Select Topic Again","Exit"],
+                                                choices:["Company Topic Question Pdf - Topic Separately","Company Topic Question Pdf - Topic Combine","Select Topic Again","Exit"],
 
                                             }
                                         ]);
@@ -219,28 +219,19 @@ async function main(){
                                                type:"list",
                                                name:"lType",
                                                message:chalk.bold(`For ${chalk.yellow(singleCompany)} - Select Any ${chalk.red('ONE')}`),
-                                               choices:[`Select Different Level For each Topic For ${singleCompany}`,
+                                               choices:[`Select Different Level For Topic For ${singleCompany}`,
                                                    `Without Level (Random) For ${singleCompany}`,
-                                                   `Easy Level For All Topics For ${singleCompany}`,
-                                                   `Medium Level For All Topics For ${singleCompany}`,
-                                                   `Hard Level For All Topics For ${singleCompany}`,
                                                    "Exit"],
                                            }
 
                                        ]);
-                                       if(ans.lType==`Hard Level For All Topics For ${singleCompany}`){
-                                            userSelectedLevelOptions = "Hard";
+
+                                        if(ans.lType==`Without Level (Random) For ${singleCompany}`){
+                                            userSelectedLevelOptions ="Without";
                                         }
-                                       else if(ans.lType==`Easy Level For All Topics For ${singleCompany}`){
-                                           userSelectedLevelOptions ="Easy";
-                                       }
-                                       else if(ans.lType==`Medium Level For All Topics For ${singleCompany}`){
-                                           userSelectedLevelOptions ="Medium";
-                                       }else if(ans.lType==`Without Level (Random) For ${singleCompany}`){
-                                           userSelectedLevelOptions ="Without";
-                                       }else if(ans.lType==`Select Different Level For each Topic For ${singleCompany}`){
-                                           userSelectedLevelOptions="eachTime";
-                                       }
+                                        else if(ans.lType==`Select Different Level For Topic For ${singleCompany}`){
+                                            userSelectedLevelOptions="eachTime";
+                                        }
                            
                                     }
                                    ///working here
@@ -248,9 +239,6 @@ async function main(){
                                     await threeInOneCreator(gPage,singleCompany,selectedTopic,userSelectedLevelOptions,selectedTopicOptions);
                                    //
 
-                                }else if(selectedTopicOptions=="Both Options 1 And 2"){
-                                    console.log(selectedTopicOptions);
-                                    console.log(selectedTopic);
                                 }
 
                             }
