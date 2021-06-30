@@ -238,8 +238,10 @@ inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'
                                 }
 
                             }
+                            console.log(center((chalk.bgRedBright.bold.black("\n Thank You For Using questionsFinder ")),122));
                         }
                     }
                 })
+                
             }
 }

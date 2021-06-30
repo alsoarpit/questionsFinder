@@ -6,6 +6,7 @@ const inquirer = require('inquirer');
 const puppeteer = require('puppeteer');
 const { companyQuestionsCreator } = require('./companyQuestionsCreator');
 const {threeInOne} = require('./threeInOne')
+
     questionsFinderMenu();
     function questionsFinderMenu(){
 
@@ -33,22 +34,36 @@ const {threeInOne} = require('./threeInOne')
                 type:"list",
                 name:"lType",
                 message:chalk.bold(`Select Any ${chalk.red('ONE')}`),
-                choices:["Company Related Question's GFG","Topic Wise Question's GFG","Company - Topic - Level (3 in 'ONE') GFG","LeetCode Question Level Wise","Exit"],
+                choices:["Company Related Question's GFG",
+                "Topic Wise Question's GFG",
+                "Company - Topic - Level (3 in 'ONE') GFG",
+                "LeetCode Top 100 Liked Questions",
+                "LeetCode Top 100 Curated Algo",
+                "LeetCode Top 100 Interview Questions",
+                "Exit"],
             }
         ]).then((answer)=>{
 
             let userSelectedAnswer = answer.lType;
             if(userSelectedAnswer=="Company Related Question's GFG"){
-                companyQuestionsCreator();
+                companyQuestionsCreator();//FullyDone
+                
             }
             else if(userSelectedAnswer=="Topic Wise Question's GFG"){
                   //topicWiseQuestion();
             }
             else if(userSelectedAnswer=="Company - Topic - Level (3 in 'ONE') GFG"){
                 threeInOne();
+                
             }
-            else if(userSelectedAnswer=="LeetCode Question Level Wise"){
-                    // leetcode()
+            else if(userSelectedAnswer=="LeetCode Top 100 Liked Questions"){
+                console.log("a");
+            }
+            else if(userSelectedAnswer=="LeetCode Top 100 Curated Algo"){
+                console.log("b");
+            }
+            else if(userSelectedAnswer=="LeetCode Top 100 Interview Questions"){
+                console.log("c");
             }
             else if(userSelectedAnswer=="Exit"){process.exit(0);}
         });

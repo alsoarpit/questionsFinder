@@ -10,7 +10,6 @@ const doc = require('pdfkit');
 const { list } = require('pdfkit');
 var fuzzy = require('fuzzy');
 
-
 inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'));
 exports.companyQuestionsCreator = (async ()=>{
 
@@ -41,7 +40,7 @@ exports.companyQuestionsCreator = (async ()=>{
             {
                 type: 'checkbox-plus',
                 name: 'cbType',
-                message: chalk.bold(`${chalk.bold.red('Select  Any Company')} - You Can Also Select ${chalk.red.bold('Multiple')} Company`),
+                message: chalk.bold(`Select ${chalk.bold.red('Any Company')} - You Can Also Select ${chalk.red.bold('Multiple')} Company`),
                 pageSize: 10,
                 highlight: true,
                 searchable: true,    
@@ -175,47 +174,53 @@ exports.companyQuestionsCreator = (async ()=>{
                     await gPage.waitForTimeout(600);
                     await scrollToBottom();
 
-                    let companyQuestionsArrNotProper = await gPage.evaluate(()=>{
+                    let companyQuestionLinkObj = await gPage.evaluate(()=>{
                         
                         let allCpyQues = document.querySelectorAll(
-                                ".panel-body span"
+                                ".panel.problem-block div>span"
                         );
+                        let allCpyQuesLink = document.querySelectorAll('a[style="position: absolute;top: 0;left: 0;height: 100%;width: 100%;z-index:1;pointer:cursor;"]');
+
                         let allCompanyQuestionArr=[];
+                        let allCompanyQuestionLinkArr=[];
                         // cant Do Direct Because its not ARR its Type of Arr :-
                         for(let i=0;i<allCpyQues.length;i++){
                             allCompanyQuestionArr[i] = allCpyQues[i].innerHTML;
+                            allCompanyQuestionLinkArr[i] = allCpyQuesLink[i].getAttribute('href');
                         }
-                        return allCompanyQuestionArr;
+                        return {allCompanyQuestionArr,allCompanyQuestionLinkArr};
 
                     });
-                    let companyQuestionArr = fixArr(companyQuestionsArrNotProper);
+                    let companyQuestionArr = companyQuestionLinkObj.allCompanyQuestionArr;
+                    let companyQuestionLinkArr = companyQuestionLinkObj.allCompanyQuestionLinkArr
+                   
 
                         if(companyQuestionArr.length!=0){
-                            await folderCheck(singleLevel,companyQuestionArr,singleCompany);
-                            console.log(chalk.bold.yellow(`Congratulations questionsPDF For ${singleCompany} ${singleLevel} Level has been Created` ));
+                            await folderCheck(singleLevel,companyQuestionArr,singleCompany,companyQuestionLinkArr);
+                            console.log(chalk.bold.yellow(`Congratulations questionsPDF And Link For ${singleCompany} ${singleLevel} Level has been Created` ));
                         }else{
                             console.log(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For ${singleCompany} : ${singleLevel} : Questions`));
                         }
                     }
                 }
-                console.log(center((chalk.bgRedBright.bold.black("\n Thank You For Using questionsFinder ")),125));
+                console.log(center((chalk.bgRedBright.bold.black("\n Thank You For Using questionsFinder ")),122));
             }
             //Require For PDF CREATE
 
             //---------------------------//
 
-            function folderCheck(singleLevel,companyQuestionArr,singleCompany){
+            function folderCheck(singleLevel,companyQuestionArr,singleCompany,companyQuestionLinkArr){
                 let folderPath = "./questionsFinder_Downloads/companyRelatedQuestions/"+singleCompany+"_Questions"
                 if (fs.existsSync(folderPath)) {
-                    pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany);
+                    pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,companyQuestionLinkArr);
                 }else {
                     fs.mkdirSync(folderPath,{ recursive: true });
-                    pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany);
+                    pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,companyQuestionLinkArr);
                 }
             };
 
             //------------------------//
-            function pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany){
+            function pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,companyQuestionLinkArr){
                 const doc = new PDFDocument;
                 doc.pipe(fs.createWriteStream(folderPath+"/"+singleCompany+"_"+singleLevel+"_Questions"+'.pdf'))
                     
@@ -225,7 +230,12 @@ exports.companyQuestionsCreator = (async ()=>{
                     doc.moveDown();
                     doc.font('./fonts/CascadiaCode.ttf')
                         .fontSize(18)
-                        .list(companyQuestionArr,{ listType: 'numbered' })
+                        for(idx in companyQuestionArr){
+                            doc.text(`${Number(idx)+1}. ${companyQuestionArr[idx]}`,{
+                                link:companyQuestionLinkArr[idx],
+                            })
+                            doc.moveDown(1.1);
+                        }
                 doc.end()
             }
             //-----------------------//
@@ -239,17 +249,8 @@ exports.companyQuestionsCreator = (async ()=>{
             }
 
             //---------------------//
-            function fixArr(Arr){
-                let arrLen = Arr.length-1;
-                let newArr=[]
-                let idx=0;
-                for(let i=0;i<=arrLen;i++){
-                    newArr[idx]=Arr[i];
-                    idx++;
-                     i++;
-                }
-            return newArr;
-            }
+         
+            
         });
     }
 })

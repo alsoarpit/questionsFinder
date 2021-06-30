@@ -1,3 +1,4 @@
+`--unhandled-rejections=strict` 
 const fs = require('fs');
 const CFonts = require('cfonts');
 const center = require('center-align');
@@ -120,26 +121,30 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
 
                                 await scrollToBottom();
 
-                                    let companyQuestionsArrNotProper = await gPage.evaluate(()=>{
+                                let companyQuestionLinkObj = await gPage.evaluate(()=>{
                             
-                                        let allCpyQues = document.querySelectorAll(
-                                                ".panel-body span"
-                                        );
-                                        let allCompanyQuestionArr=[];
-                                        // cant Do Direct Because its not ARR its Type of Arr :-
-
-                                        for(let i=0;i<allCpyQues.length;i++){
-                                            allCompanyQuestionArr[i] = allCpyQues[i].innerHTML;
-                                        }
-                                        
-                                        return allCompanyQuestionArr;
-                                        
-                                    });
-                                    let companyQuestionArr = fixArr(companyQuestionsArrNotProper);
-
+                                    let allCpyQues = document.querySelectorAll(
+                                            ".panel.problem-block div>span"
+                                    );
+                                    let allCpyQuesLink = document.querySelectorAll('a[style="position: absolute;top: 0;left: 0;height: 100%;width: 100%;z-index:1;pointer:cursor;"]');
+                                    let allCompanyQuestionArr=[];
+                                    let allCompanyQuestionLinkArr=[];
+                                    // cant Do Direct Because its not ARR its Type of Arr :-
+        
+                                    for(let i=0;i<allCpyQues.length;i++){
+                                        allCompanyQuestionArr[i] = allCpyQues[i].innerHTML;
+                                        allCompanyQuestionLinkArr[i] = allCpyQuesLink[i].getAttribute('href');
+                                    }
+                                    
+                                    return {allCompanyQuestionArr,allCompanyQuestionLinkArr}
+                                    
+                                });
+                                let companyQuestionArr = companyQuestionLinkObj.allCompanyQuestionArr;
+                                let companyQuestionLinkArr = companyQuestionLinkObj.allCompanyQuestionLinkArr;
+                            
                                     if(companyQuestionArr.length!=0){
-                                        await folderCheck(singleLevel,companyQuestionArr,singleCompany,singleTopicPdf);
-                                        console.log(chalk.bold.yellow(`Congratulations QuestionsPDF For ${singleCompany} : ${singleTopicPdf} : ${singleLevel} Level has been Created` ));
+                                        await folderCheck(singleLevel,companyQuestionArr,singleCompany,singleTopicPdf,companyQuestionLinkArr);
+                                        console.log(chalk.bold.yellow(`Congratulations QuestionsPDF And Link For ${singleCompany} : ${singleTopicPdf} : ${singleLevel} Level has been Created` ));
                                     }else{
                                         console.log(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For ${singleCompany} : ${singleTopicPdf} :${singleLevel} : Questions`));
                                     }  
@@ -211,7 +216,7 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                     },selectedTopic);
 
 
-                    await gPage.waitForTimeout(5000);
+                    await gPage.waitForTimeout(3000);
 
                         if(globalLevel[j] =="Easy"){
                             await gPage.evaluate( ()=>{
@@ -248,27 +253,34 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                         
                         await gPage.waitForTimeout(2000);
                         await scrollToBottom();
-                        let companyQuestionsArrNotProper = await gPage.evaluate(()=>{
+                        await gPage.waitForTimeout(2000);
+                        let companyQuestionLinkObj = await gPage.evaluate(()=>{
                             
                             let allCpyQues = document.querySelectorAll(
-                                    ".panel-body span"
+                                    ".panel.problem-block div>span"
                             );
+                            let allCpyQuesLink = document.querySelectorAll('a[style="position: absolute;top: 0;left: 0;height: 100%;width: 100%;z-index:1;pointer:cursor;"]');
                             let allCompanyQuestionArr=[];
+                            let allCompanyQuestionLinkArr=[];
                             // cant Do Direct Because its not ARR its Type of Arr :-
 
                             for(let i=0;i<allCpyQues.length;i++){
                                 allCompanyQuestionArr[i] = allCpyQues[i].innerHTML;
+                                allCompanyQuestionLinkArr[i] = allCpyQuesLink[i].getAttribute('href');
                             }
                             
-                            return allCompanyQuestionArr;
+                            return {allCompanyQuestionArr,allCompanyQuestionLinkArr}
                             
                         });
-                        let companyQuestionArr = fixArr(companyQuestionsArrNotProper);
+                        let companyQuestionArr = companyQuestionLinkObj.allCompanyQuestionArr;
+                        let companyQuestionLinkArr = companyQuestionLinkObj.allCompanyQuestionLinkArr;
+                        
+                        // fixArr(companyQuestionsArrNotProper);
                         
                         
-                        if(companyQuestionArr.length!=0){
-                            await folderCheck(singleLevel,companyQuestionArr,singleCompany,singlePdfString);
-                            console.log(chalk.bold.yellow(`Congratulations QuestionsPDF For ${singleCompany} : ${singlePdfString} : ${singleLevel} Level has been Created` ));
+                        if(companyQuestionArr.length>0 && companyQuestionLinkArr.length>0){
+                            await folderCheck(singleLevel,companyQuestionArr,singleCompany,singlePdfString,companyQuestionLinkArr);
+                            console.log(chalk.bold.yellow(`Congratulations QuestionsPDF And Link For ${singleCompany} : ${singlePdfString} : ${singleLevel} Level has been Created` ));
                         }else{
                             console.log(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For ${singleCompany} : ${singlePdfString} :${singleLevel} : Questions`));
                         }   
@@ -279,24 +291,25 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                 
     }//---------------------loop over --------------------------------//
     
-    console.log(center((chalk.bgRedBright.bold.black("\n Thank You For Using questionsFinder ")),125));
+    
 
         
             //---------------------------//
 
-            function folderCheck(singleLevel,companyQuestionArr,singleCompany,singleTopic){
-                let folderPath = "./threeFinder_Downloads/threeInOne/"+singleCompany+"_Questions"
+            function folderCheck(singleLevel,companyQuestionArr,singleCompany,singleTopic,companyQuestionLinkArr){
+                let folderPath = "./questionsFinder_Downloads/threeInOne/"+singleCompany+"_Questions"
                 if (fs.existsSync(folderPath)) {
-                    pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,singleTopic);
+                    pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,singleTopic,companyQuestionLinkArr);
                 }else {
                     fs.mkdirSync(folderPath,{ recursive: true });
-                    pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,singleTopic);
+                    pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,singleTopic,companyQuestionLinkArr);
                 }
             };
 
             //------------------------//
-            function pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,singleTopic){
+            function pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,singleTopic,companyQuestionLinkArr){
                 const doc = new PDFDocument;
+    
                 doc.pipe(fs.createWriteStream(folderPath+"/"+singleCompany+"_"+singleTopic+"_"+singleLevel+"_Questions"+'.pdf'))
                     
                     doc.font('./fonts/CascadiaCode-Bold.otf')
@@ -305,7 +318,13 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                     doc.moveDown();
                     doc.font('./fonts/CascadiaCode.ttf')
                         .fontSize(18)
-                        .list(companyQuestionArr,{ listType: 'numbered' })
+                        for(let i = 0; i <companyQuestionArr.length;i++){
+                        
+                            doc.text(`${Number(i)+1}. ${companyQuestionArr[i]}`,{
+                                link:companyQuestionLinkArr[i],
+                            });
+                            doc.moveDown(1.1);
+                        }
                 doc.end()
             }
             //-----------------------//
@@ -323,17 +342,17 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
 
     //-----------------------//
 
-        function fixArr(Arr){
-            let arrLen = Arr.length-1;
-            let newArr=[]
-            let idx=0;
-            for(let i=0;i<=arrLen;i++){
-                newArr[idx]=Arr[i];
-                idx++;
-                i++;
-            }
-            return newArr;
-        }
+        // function fixArr(Arr){
+        //     let arrLen = Arr.length-1;
+        //     let newArr=[]
+        //     let idx=0;
+        //     for(let i=0;i<=arrLen;i++){
+        //         newArr[idx]=Arr[i];
+        //         idx++;
+        //         i++;
+        //     }
+        //     return newArr;
+        // }
 
     //---------------------//
 
