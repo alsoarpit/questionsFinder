@@ -289,12 +289,7 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
 
                 }
                 
-    }//---------------------loop over --------------------------------//
-    
-    
-
-        
-            //---------------------------//
+    }
 
             function folderCheck(singleLevel,companyQuestionArr,singleCompany,singleTopic,companyQuestionLinkArr){
                 let folderPath = "./questionsFinder_Downloads/threeInOne/"+singleCompany+"_Questions"
@@ -305,7 +300,6 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                     pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,singleTopic,companyQuestionLinkArr);
                 }
             };
-
             //------------------------//
             function pdfCreate(folderPath,singleLevel,companyQuestionArr,singleCompany,singleTopic,companyQuestionLinkArr){
                 const doc = new PDFDocument;
@@ -322,15 +316,11 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                         
                             doc.text(`${Number(i)+1}. ${companyQuestionArr[i]}`,{
                                 link:companyQuestionLinkArr[i],
-                            });
-                            doc.moveDown(1.1);
+                            })
+                            .moveDown(1.1);
                         }
                 doc.end()
             }
-            //-----------------------//
-
-            
-    //-----------------------//
 
     async function scrollToBottom() {
         const distance = 60;
@@ -339,23 +329,4 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
         await gPage.waitForTimeout(500);
         }
     }
-
-    //-----------------------//
-
-        // function fixArr(Arr){
-        //     let arrLen = Arr.length-1;
-        //     let newArr=[]
-        //     let idx=0;
-        //     for(let i=0;i<=arrLen;i++){
-        //         newArr[idx]=Arr[i];
-        //         idx++;
-        //         i++;
-        //     }
-        //     return newArr;
-        // }
-
-    //---------------------//
-
-
-
 }

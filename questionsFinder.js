@@ -6,6 +6,7 @@ const inquirer = require('inquirer');
 const puppeteer = require('puppeteer');
 const { companyQuestionsCreator } = require('./companyQuestionsCreator');
 const {threeInOne} = require('./threeInOne')
+const {top100LikedQuestions} = require('./leetCodeFunctions')
 
     questionsFinderMenu();
     function questionsFinderMenu(){
@@ -57,7 +58,7 @@ const {threeInOne} = require('./threeInOne')
                 
             }
             else if(userSelectedAnswer=="LeetCode Top 100 Liked Questions"){
-                console.log("a");
+                top100LikedQuestions();
             }
             else if(userSelectedAnswer=="LeetCode Top 100 Curated Algo"){
                 console.log("b");
