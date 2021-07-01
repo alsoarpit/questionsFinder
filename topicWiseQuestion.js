@@ -269,9 +269,6 @@ inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'
                     singlePdfString += selectedTopic[i]+"_";
                     clickSelectedTopic[i] = "'"+selectedTopic[i]+"'";
                 }
-                console.log(clickSelectedTopic);
-                console.log(selectedTopic);
-                console.log(singlePdfString);
                 var userSelectedLevelOptions;
                 await levelOptions();
                 async function levelOptions(){
