@@ -5,8 +5,10 @@ const chalk = require('chalk');
 const inquirer = require('inquirer');
 const puppeteer = require('puppeteer');
 const { companyQuestionsCreator } = require('./companyQuestionsCreator');
+const {topicWiseQuestion} = require('./topicWiseQuestion');
 const {threeInOne} = require('./threeInOne')
-const {top100LikedQuestions} = require('./leetCodeFunctions')
+const {top100LikedQuestions,top100CuratedAlgo,top100InterviewQuestions} = require('./leetCodeFunctions')
+
 
     questionsFinderMenu();
     function questionsFinderMenu(){
@@ -47,26 +49,27 @@ const {top100LikedQuestions} = require('./leetCodeFunctions')
 
             let userSelectedAnswer = answer.lType;
             if(userSelectedAnswer=="Company Related Question's GFG"){
-                companyQuestionsCreator();//FullyDone
+                companyQuestionsCreator();//FullyDone_with_loadingPart
                 
             }
             else if(userSelectedAnswer=="Topic Wise Question's GFG"){
-                  //topicWiseQuestion();
+                  topicWiseQuestion();//fullyDone_with_loadingPart
             }
             else if(userSelectedAnswer=="Company - Topic - Level (3 in 'ONE') GFG"){
-                threeInOne();
+                threeInOne();//fullyDone_with_loadingPart
                 
             }
             else if(userSelectedAnswer=="LeetCode Top 100 Liked Questions"){
-                top100LikedQuestions();
+                top100LikedQuestions();//fullyDone_with_loadingPart
             }
             else if(userSelectedAnswer=="LeetCode Top 100 Curated Algo"){
-                console.log("b");
+                top100CuratedAlgo();//fullyDone_with_loadingPart
             }
             else if(userSelectedAnswer=="LeetCode Top 100 Interview Questions"){
-                console.log("c");
+                top100InterviewQuestions();//fullyDone_with_loadingPart
             }
             else if(userSelectedAnswer=="Exit"){process.exit(0);}
+            
         });
        
 

@@ -9,10 +9,13 @@ const PDFDocument = require('pdfkit');
 const doc = require('pdfkit');
 const { list } = require('pdfkit');
 var fuzzy = require('fuzzy');
+const ora = require('ora');
+const spinner = ora();
+
 
 inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'));
 exports.companyQuestionsCreator = (async ()=>{
-
+    try{
     var browser = await puppeteer.launch({
         headless:false,
         defaultViewport: null,
@@ -21,6 +24,10 @@ exports.companyQuestionsCreator = (async ()=>{
     });
     let pagesArr = await browser.pages();
     var gPage=pagesArr[0];
+    spinner.spinner = "arc"
+	spinner.color = 'yellow';
+    spinner.text = 'Loading... GFG Company Names';
+    spinner.start();
     await gPage.goto("https://practice.geeksforgeeks.org/company-tags/");
     await gPage.waitForSelector(".well.table.whiteBgColor .text-center a b");
     var allCompanyNameArr = await gPage.evaluate(()=>{
@@ -34,6 +41,7 @@ exports.companyQuestionsCreator = (async ()=>{
         }
         return allCompanyNameArr;
     });
+    spinner.stop().clear();
     await userSelectedCompanyName();
      async function userSelectedCompanyName(){
         await inquirer.prompt([
@@ -151,8 +159,9 @@ exports.companyQuestionsCreator = (async ()=>{
                       selectedLevelArr[0]=selectedLevel;
                   }
                   for(let j=0;j<selectedLevelArr.length;j++){
-
-                    var singleLevel = selectedLevelArr[j];
+                      var singleLevel = selectedLevelArr[j];
+                      spinner.text = `Creating... GFG ${singleCompany} : ${singleLevel} Questions Pdf`;
+                      spinner.start();
 
                     await gPage.goto("https://practice.geeksforgeeks.org/company/"+singleCompany+"/");
                     await gPage.waitForSelector(".panel-title")
@@ -197,9 +206,10 @@ exports.companyQuestionsCreator = (async ()=>{
 
                         if(companyQuestionArr.length!=0){
                             await folderCheck(singleLevel,companyQuestionArr,singleCompany,companyQuestionLinkArr);
-                            console.log(chalk.bold.yellow(`Congratulations questionsPDF And Link For ${singleCompany} ${singleLevel} Level has been Created` ));
+                            spinner.succeed(chalk.bold.yellow(`Congratulations QuestionsPDF And Link For : ${singleCompany} : ${singleLevel} Level has been Created` ));
+         
                         }else{
-                            console.log(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For ${singleCompany} : ${singleLevel} : Questions`));
+                            spinner.warn(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For : ${singleCompany} :${singleLevel} : Questions`));
                         }
                     }
                 }
@@ -254,4 +264,9 @@ exports.companyQuestionsCreator = (async ()=>{
             
         });
     }
+
+}catch (e) {
+    spinner.fail(chalk.bold.yellow("Please Check Your Internet Connection Or 'RESTART' - questionsFinder"))
+    }
+
 })

@@ -9,6 +9,9 @@ const PDFDocument = require('pdfkit');
 const doc = require('pdfkit');
 const { list } = require('pdfkit');
 var fuzzy = require('fuzzy');
+const ora = require('ora');
+const spinner = ora();
+
 inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'));
 
 exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelectedTopic,userSelectedLevelOptions,selectedTopicOptions){
@@ -61,8 +64,12 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
 
 
                     for(let j = 0; j <globalLevel.length;j++){
+
                             var singleLevel = globalLevel[j];
-                            
+                            spinner.spinner = "arc"
+                            spinner.color = 'yellow';
+                            spinner.text = `Creating... QuestionsPDF GFG ${singleCompany} : ${singleTopic} : ${singleLevel} `;
+                            spinner.start();
                             await gPage.goto("https://practice.geeksforgeeks.org/company/"+singleCompany+"/");
                             await gPage.evaluate(async(singleTopic) => {                 
 
@@ -143,10 +150,13 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                                 let companyQuestionLinkArr = companyQuestionLinkObj.allCompanyQuestionLinkArr;
                             
                                     if(companyQuestionArr.length!=0){
-                                        await folderCheck(singleLevel,companyQuestionArr,singleCompany,singleTopicPdf,companyQuestionLinkArr);
-                                        console.log(chalk.bold.yellow(`Congratulations QuestionsPDF And Link For ${singleCompany} : ${singleTopicPdf} : ${singleLevel} Level has been Created` ));
+                                        await folderCheck(singleLevel,companyQuestionArr,singleCompany,singleTopicPdf,companyQuestionLinkArr); 
+                                        spinner.stop().clear();
+                                        spinner.succeed(chalk.bold.yellow(`Congratulations QuestionsPDF And Link For : ${singleCompany} : ${singleTopicPdf} :${singleLevel} Level has been Created` ));
+                                        
                                     }else{
-                                        console.log(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For ${singleCompany} : ${singleTopicPdf} :${singleLevel} : Questions`));
+                                        spinner.stop().clear();
+                                        spinner.warn(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For : ${singleCompany}:${singleTopicPdf} : ${singleLevel} : Questions`));
                                     }  
 
                     }
@@ -189,7 +199,10 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                 for(let j = 0; j <globalLevel.length; j++){
 
                     var singleLevel = globalLevel[j];
-                    
+                    spinner.spinner = "arc"
+                    spinner.color = 'yellow';
+                    spinner.text = `Creating... questionsPdf GFG : ${singleCompany} : ${singlePdfString}: ${singleLevel}`;
+                    spinner.start();
                     
                     await gPage.goto("https://practice.geeksforgeeks.org/company/"+singleCompany+"/");
                         await gPage.evaluate((selectedTopic) => {                 
@@ -280,9 +293,12 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                         
                         if(companyQuestionArr.length>0 && companyQuestionLinkArr.length>0){
                             await folderCheck(singleLevel,companyQuestionArr,singleCompany,singlePdfString,companyQuestionLinkArr);
-                            console.log(chalk.bold.yellow(`Congratulations QuestionsPDF And Link For ${singleCompany} : ${singlePdfString} : ${singleLevel} Level has been Created` ));
+                            spinner.stop().clear();
+                            spinner.succeed(chalk.bold.yellow(`Congratulations QuestionsPDF And Link For : ${singleCompany} : ${singlePdfString}: ${singleLevel} Level has been Created` ));
+                            // console.log(chalk.bold.yellow(`Congratulations QuestionsPDF And Link For ${singleCompany} : ${singlePdfString} : ${singleLevel} Level has been Created` ));
                         }else{
-                            console.log(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For ${singleCompany} : ${singlePdfString} :${singleLevel} : Questions`));
+                            spinner.stop().clear();
+                            spinner.warn(chalk.bold.yellow(`GFG HAS ${chalk.red('NULL')} Questions For : ${singleCompany} : ${singlePdfString} : ${singleLevel} : Questions`));
                         }   
 
 
@@ -322,11 +338,13 @@ exports.threeInOneCreator = async function (gPage,singleCompany,notPerfectSelect
                 doc.end()
             }
 
-    async function scrollToBottom() {
-        const distance = 60;
-        while (await gPage.evaluate(() => document.scrollingElement.scrollTop + window.innerHeight < document.scrollingElement.scrollHeight)) {
-        await gPage.evaluate((y) => { document.scrollingElement.scrollBy(0, y); }, distance);
-        await gPage.waitForTimeout(500);
-        }
+        async function scrollToBottom() {
+            const distance = 60;
+            while (await gPage.evaluate(() => document.scrollingElement.scrollTop + window.innerHeight < document.scrollingElement.scrollHeight)) {
+            await gPage.evaluate((y) => { document.scrollingElement.scrollBy(0, y); }, distance);
+            await gPage.waitForTimeout(500);
+            }
+
+    
     }
 }

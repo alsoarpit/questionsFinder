@@ -9,10 +9,16 @@ const doc = require('pdfkit');
 const { list } = require('pdfkit');
 var fuzzy = require('fuzzy');
 const {threeInOneCreator} = require('./threeInOneCreator');
+const ora = require('ora');
+const spinner = ora();
 inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'));
 
  exports.threeInOne = async function main(){
-
+     try{
+        spinner.spinner = "arc"
+        spinner.color = 'yellow';
+        spinner.text = 'Loading... GFG Company Names';
+        spinner.start();
         var browser = await puppeteer.launch({
             headless:false,
             defaultViewport: null,
@@ -34,7 +40,7 @@ inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'
             }
             return allCompanyNameArr;
         });
-
+        spinner.stop().clear();
         await userSelectedCompanyName();
              function userSelectedCompanyName(){
                      inquirer.prompt([
@@ -77,9 +83,9 @@ inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'
                         userSelectedTopic();
                         async function userSelectedTopic(){
                             for(let i=0;i<selectedCompanyArr.length;i++){
-
                                 var singleCompany = selectedCompanyArr[i];
-
+                                spinner.text =`Loading... GFG ${singleCompany} : Topics `;
+                                spinner.start();
                                 await gPage.goto("https://practice.geeksforgeeks.org/company/"+singleCompany+"/");
                         
                                 var topicArr = await gPage.evaluate(async() => {
@@ -97,7 +103,8 @@ inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'
                                         }
                                         return topicArr;
                                 });
-
+                                
+                                spinner.stop().clear();
                                 var  selectedTopic;
                                 await userSelectedTopic();
                                         async function userSelectedTopic(){
@@ -244,4 +251,7 @@ inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'
                 })
                 
             }
+        }catch(e) {
+            spinner.fail(chalk.bold.yellow("Please Check Your Internet Connection Or 'RESTART' - questionsFinder"))
+        }
 }
