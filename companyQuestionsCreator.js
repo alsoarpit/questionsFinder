@@ -20,7 +20,7 @@ exports.companyQuestionsCreator = (async ()=>{
         headless:false,
         defaultViewport: null,
         args: ["--start-maximized"],
-        slowMo : 50,
+        slowMo : 120,
     });
     let pagesArr = await browser.pages();
     var gPage=pagesArr[0];

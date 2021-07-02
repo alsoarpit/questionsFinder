@@ -20,7 +20,7 @@ async function top100LikedQuestions(){
         headless:false,
         defaultViewport: null,
         args: ["--start-maximized"],
-        slowMo : 100,
+        slowMo : 120,
     });
     let pagesArr = await browser.pages();
     var gPage=pagesArr[0];
@@ -117,7 +117,7 @@ async function top100CuratedAlgo(){
         headless:false,
         defaultViewport: null,
         args: ["--start-maximized"],
-        slowMo : 100,
+        slowMo : 120,
     });
     let pagesArr = await browser.pages();
     var gPage=pagesArr[0];
@@ -214,7 +214,7 @@ async function top100InterviewQuestions(){
         headless:false,
         defaultViewport: null,
         args: ["--start-maximized"],
-        slowMo : 100,
+        slowMo : 120,
     });
     let pagesArr = await browser.pages();
     var gPage=pagesArr[0];

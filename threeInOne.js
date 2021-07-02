@@ -23,7 +23,7 @@ inquirer.registerPrompt('checkbox-plus', require('inquirer-checkbox-plus-prompt'
             headless:false,
             defaultViewport: null,
             args: ["--start-maximized"],
-            slowMo : 100,
+            slowMo : 120,
         });
         let pagesArr = await browser.pages();
         var gPage=pagesArr[0];

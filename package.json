@@ -28,7 +28,7 @@
     "log-update": "^4.0.0",
     "ora": "^5.4.1",
     "pdfkit": "^0.12.1",
-    "puppeteer": "^10.0.0"
+    "puppeteer": "^10.1.0"
   },
   "devDependencies": {},
   "description": ""
